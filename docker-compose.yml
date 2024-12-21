@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:latest
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.traefik.address=:8080"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: hotel_user
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  user_service:
+    build:
+      context: ./user_service
+    ports:
+      - "8001:8001"
+    depends_on:
+      - traefik
+      - postgres
+      - redis
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=True
+      - POSTGRESQL_DB_NAME=hotel_user
+      - POSTGRESQL_HOST=postgres
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    labels:
+      - "traefik.http.routers.user_service.rule=PathPrefix(`/user_service`)"
+      - "traefik.http.services.user_service.loadbalancer.server.port=8001"
+
+volumes:
+  postgres_data:

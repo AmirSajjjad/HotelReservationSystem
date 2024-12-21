@@ -19,11 +19,20 @@ Welcome to the Hotel Reservation System project! This application aims to stream
     - **Database:** PostgreSQL
  
   - **Endpoints:**
-    - `/register`: Register a new user
-    - `/login`: Authenticate a user
-    - `/profile`: Retrieve or update user profile
-
-- ### Hotel Service
+    - `/user_service/api/v1/auth/check_phone`: send OTP message to phone number
+    - `/user_service/api/v1/auth/check_phone/verify`: validate OTP code then return access_token and refresh_token. [register phone number if user not exists]. 
+    - `/user_service/api/v1/auth/refresh_token`: refresh access_token
+    - `/user_service/api/v1/user/`: read and update user profile
+    - `/user_service/admin`: django admin panel
+    - `/user_service/swagger`: swagger documentation (only in debug mode)
+    - `/user_service/redoc`: redoc documentation (only in debug mode)
+  - **Running Tests:**
+      To ensure the correctness of the code, you can run the tests:
+    ```sh
+    py manage.py test
+    ```
+      
+- ### Hotel Service (Comming Soon)
   - **Description:**
     - The Hotel Service manages hotel information, including details about rooms and availability. It provides endpoints for adding new hotels, updating hotel information, and retrieving details about available rooms.
 
@@ -32,24 +41,26 @@ Welcome to the Hotel Reservation System project! This application aims to stream
     - **Database:** MongoDB
 
   - **Endpoints:**
-    - `/hotels`: Retrieve a list of hotels
+    <!-- - `/hotels`: Retrieve a list of hotels
     - `/hotels/{hotel_id}`: Retrieve details of a specific hotel
     - `/rooms`: Retrieve available rooms
-    - `/rooms/{room_id}`: Retrieve details of a specific room
+    - `/rooms/{room_id}`: Retrieve details of a specific room -->
+  - **ToDo Check List:**
+    - [ ] Learning FastAPI (in progress)
 
-- ### Booking Service
+- ### Booking Service (Comming Soon)
   - **Description:**
     - The Booking Service handles room bookings. It checks room availability, creates new bookings, and manages booking statuses (confirmed, cancelled, etc.).
 
   - **Technologies:**
-    - **Framework:** Go (Gin)
-    - **Database:** MySQL
+    <!-- - **Framework:** Go (Gin)
+    - **Database:** MySQL -->
 
 
   - **Endpoints:**
-    - `/bookings`: Create a new booking
+    <!-- - `/bookings`: Create a new booking
     - `/bookings/{booking_id}`: Retrieve details of a specific booking
-    - `/bookings/user/{user_id}`: Retrieve all bookings for a specific user
+    - `/bookings/user/{user_id}`: Retrieve all bookings for a specific user -->
 
 ## Getting Started
 To get started with this project, you will need to:
@@ -62,15 +73,21 @@ To get started with this project, you will need to:
     ```sh
     cd hotel-booking-system
     ```
-3. Build and start the Docker containers:
+3. set envirements:
+   rename .env.sample to .env and edit this file
+   ```sh
+    mv .env.sample .enc
+    nano .env
+   ```
+4. Build and start the Docker containers:
     ```sh
     docker-compose up --build
     ```
-4. Once the containers are up and running, you can access the services:
-   - User Service (Django): http://localhost:8000
-   - Booking Service (FastAPI): http://localhost:8001
-   - Room Inventory Service (Go): http://localhost:8002
-5. To stop the containers, use:
+5. Once the containers are up and running, you can access the services:
+   - User Service (Django): http://localhost:8001
+   - Booking Service (FastAPI): http://localhost:8002
+   - Room Inventory Service (Go): http://localhost:8003
+6. To stop the containers, use:
     ```sh
     docker-compose down
     ```
@@ -78,6 +95,11 @@ To get started with this project, you will need to:
 ## Contributing
 We welcome contributions to improve the project. Please fork the repository and submit pull requests for any enhancements or bug fixes.
 
+## Contact
+
+If you have any questions, suggestions, or comments about this project, please feel free to reach out to us at [this link](https://t.me/AmirSajjjad73). We usually respond within 24 hours.
+
+You can also contact us via email at amirsajjjad2@gmail.com.
 
 <!---
 ## Architecture
